@@ -1,5 +1,4 @@
 import pytest
-from datetime import datetime
 from src.code_solution import BankAccount
 
 @pytest.fixture

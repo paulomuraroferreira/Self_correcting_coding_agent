@@ -1,24 +1,16 @@
-# Select LLM
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 from src.logger_setup import logger
 from dotenv import load_dotenv
 load_dotenv()
-from operator import itemgetter
 from langchain_core.pydantic_v1 import BaseModel, Field
-from langchain_core.runnables import RunnablePassthrough
-from langchain_core.prompts import PromptTemplate
 from typing import Annotated
-from typing import Dict, TypedDict, List
+from typing import TypedDict
 from langgraph.graph.message import AnyMessage, add_messages
-
-from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, StateGraph
 from langgraph.checkpoint.memory import MemorySaver
-import pytest
-import sys
-import io
+import subprocess
 
 class GraphState(TypedDict):
     """
@@ -51,14 +43,6 @@ class TestCode:
         self.code_file_path = "src/code_solution.py"
 
     def run_tests(self):
-        # The list argument can include specific files, directories, or options as you would on the command line.
-        # captured_output = io.StringIO()
-        # sys.stdout = captured_output
-        # try:
-        #     result = pytest.main(["-v", self.name_of_test_file])
-        # finally:
-        #     sys.stdout = sys.__stdout__
-        import subprocess
 
         result = subprocess.run(["pytest", "-v", self.name_of_test_file], capture_output=True, text=True)
 
@@ -262,7 +246,6 @@ class AgentHandler:
             },
         )
 
-        #memory = SqliteSaver.from_conn_string(":memory:")
         self.graph = self.builder.compile(checkpointer=MemorySaver())
 
 

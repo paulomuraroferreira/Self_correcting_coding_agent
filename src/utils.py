@@ -9,9 +9,6 @@ class PathInfo:
     DATA_FOLDER_PATH:str = str(current_file_dir.parent / "data" )
     ENV_FILE_PATH:str = str(current_file_dir.parent / '.env')
 
-
-import uuid 
-
 def _print_event(event: dict, _printed: set, max_length=1500):
     current_state = event.get("dialog_state")
     if current_state:
