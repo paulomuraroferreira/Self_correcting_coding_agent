@@ -52,21 +52,25 @@ class TestCode:
 
     def run_tests(self):
         # The list argument can include specific files, directories, or options as you would on the command line.
-        captured_output = io.StringIO()
-        sys.stdout = captured_output
-        try:
-            result = pytest.main(["-v", self.name_of_test_file])
-        finally:
-            sys.stdout = sys.__stdout__
+        # captured_output = io.StringIO()
+        # sys.stdout = captured_output
+        # try:
+        #     result = pytest.main(["-v", self.name_of_test_file])
+        # finally:
+        #     sys.stdout = sys.__stdout__
+        import subprocess
 
+        result = subprocess.run(["pytest", "-v", self.name_of_test_file], capture_output=True, text=True)
 
-        all_tests_passed = (result == 0)
+        captured_output = result.stdout
 
-        logger.info(f'\n{captured_output.getvalue()}')
+        all_tests_passed = (result.returncode == 0)
+
+        logger.info(f'\n{captured_output}')
             
         # Return the captured output and the result as a dictionary
         return {
-            "message": captured_output.getvalue(),
+            "message": captured_output,
             "all_tests_passed": all_tests_passed
     }
 
