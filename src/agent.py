@@ -245,12 +245,12 @@ class AgentHandler:
 
         self.graph = self.builder.compile(checkpointer=MemorySaver())
 
-        from IPython.display import Image
+    def display_graph_architecture(self):
 
-        # Save the image to a file instead of displaying it
+        from IPython.display import Image
         image_data = self.graph.get_graph(xray=True).draw_mermaid_png()
-        with open("output_image.png", "wb") as f:
+        with open("README_files/output_image.png", "wb") as f:
             f.write(image_data)
-        print("Image saved as output_image.png")
+        logger.info("Image saved as output_image.png")
 
 
