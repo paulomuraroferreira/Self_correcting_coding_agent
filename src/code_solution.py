@@ -5,6 +5,8 @@ class BankAccount:
         self.transactions = []
 
     def deposit(self, amount: float) -> None:
+        if amount < 0:
+            raise ValueError("Deposit amount must be positive.")
         self.balance += amount
         transaction = {
             'type': 'deposit',
@@ -14,6 +16,8 @@ class BankAccount:
         self.transactions.append(transaction)
 
     def withdraw(self, amount: float) -> bool:
+        if amount < 0:
+            raise ValueError("Withdrawal amount must be positive.")
         if amount > self.balance:
             return False
         self.balance -= amount

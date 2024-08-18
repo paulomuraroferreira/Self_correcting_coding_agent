@@ -133,7 +133,9 @@ class TestCode:
             logger.info("All tests passed!")
         else:
             logger.info(f"Some tests failed.")
-            messages += test_result['message']
+            error_message = [("user", f"Your solution failed the unit test: {test_result['message']}). Reflect on this error and your prior attempt to solve the problem. (1) State what you think went wrong with the prior solution and (2) try to solve this problem again. Return the FULL SOLUTION. Use the code tool to structure the output with a prefix, imports, and code block:")]
+            messages += error_message
+            
             return {
                 "generation": code_solution,
                 "messages": messages,
@@ -155,7 +157,7 @@ class Agent:
     def __init__(self, name_of_test_file: str):
         self.openai_model = "gpt-4o-2024-08-06"
         self.llm = ChatOpenAI(model=self.openai_model, temperature=0)
-        self.max_iterations = 3
+        self.max_iterations = 5
         self.name_of_test_file = name_of_test_file
         self.code_gen_prompt_claude = ChatPromptTemplate.from_messages(
             [
