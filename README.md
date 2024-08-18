@@ -1,18 +1,12 @@
 # README
 
-WATCH THE DEMO: https://www.youtube.com/watch?v=uGqmn2xdU54
+This repository implements an LLM agent that receives a user's prompt and corresponding unit tests. The agent generates the code, tests it for correct execution, and ensures it passes the unit tests. If the code fails to execute or fails any unit test, the agent regenerates the code until it succeeds.
 
-This repository is based on the code from LangChain's Azure Container Apps Dynamic Sessions Data Analyst Notebook (https://github.com/langchain-ai/langchain/blob/master/cookbook/azure_container_apps_dynamic_sessions_data_analyst.ipynb), where an agent reads data from a PostgreSQL database, saves it in a CSV file, and executes code based on the CSV file, such as plotting a graph.
+This project builds upon the code from LangChain's Notebook (https://github.com/mistralai/cookbook/blob/main/third_party/langchain/langgraph_code_assistant_mistral.ipynb), where an agent generates code based on the user's prompt and checks if the execution works.
 
-The main feature of the code was that it executed code in a container using Azure Container Apps dynamic sessions.
+The main contribution of this project is the integration of unit tests into the code execution process.
 
-This project replaces the Azure Container Apps dynamic sessions with docker. So when the agent executes the code, it will create a docker container, execute the code, and then remove the container. This ensures that the host machine is safe from arbitrary code from the agent.
-
-The agent architecture is as follows:
-
-![image.png](README_files/image.png)
-
-After the execute_sql_query node is executed, the data is saved as a CSV on the host machine. The Docker container then has read-only permission to access this CSV. If it plots anything, the image is passed back to the host machine via a Base64 string.
+Additionally, the original Jupyter notebook code has been refactored into a structured Python project suitable for deployment. By adhering to best coding practices, the code has been modularized, reusable functions have been created, and proper documentation and testing have been ensured. The result is a well-organized .py project that is maintainable and ready for production.
 
 
 ## Setup Instructions
@@ -21,8 +15,8 @@ After the execute_sql_query node is executed, the data is saved as a CSV on the 
 
 
 ```python
-git clone https://github.com/paulomuraroferreira/LLM-agents-with-docker.git
-cd LLM-agents-with-docker
+git clone https://github.com/paulomuraroferreira/Self_correcting_coding_agent.git
+cd Self_correcting_coding_agent
 ```
 
 2. Install Dependencies:
@@ -39,14 +33,44 @@ Create a .env file and fill the following environment variables:
 
 ```python
 OPENAI_API_KEY=your_openai_api_key
-DATABASE_URL=your_postgres_url
-LLM_MODEL=i am using 'gpt-4o'
+OPENAI_CHAT_MODEL = "gpt-4o-2024-08-06"
 ```
 
 4. Run the Application:
 
-Execute the main script to initialize the workflow and handle user queries:
+Input the code's prompt in the main.py file. The prompt should be descriptive and specify the name of the classes.
 
-```python
-python main.py
-```
+For example:
+
+    QUESTION3 = '''
+    Python Class Description
+    Class Name: BankAccount
+
+    Description:
+    The BankAccount class represents a user's bank account, allowing for deposits, withdrawals, and viewing the transaction history. The class ensures that withdrawals cannot exceed the current balance and that deposits and withdrawals are properly recorded in the transaction history.
+
+    Attributes:
+
+    balance (float): The current balance of the account, initialized to 0.
+    transactions (list): A list to store the history of transactions. Each transaction is stored as a dictionary with keys type (either 'deposit' or 'withdrawal'), amount, and date.
+    Methods:
+
+    deposit(amount: float) -> None: Adds the specified amount to the balance and records the transaction.
+    withdraw(amount: float) -> bool: Attempts to subtract the specified amount from the balance. Returns True if successful, otherwise returns False. Records the transaction if successful.
+    get_balance() -> float: Returns the current balance.
+    get_transaction_history() -> list: Returns a list of all transactions.
+    '''
+
+    main = Main(QUESTION3)
+
+5. Add the unit test code in a .py file in the the src/unit_test_folder. Also, import the corresponding class from the 
+code_solution.py file. For example, for the above prompt, the LLM will generate a class called BankAccount. Therefore, the 
+src/unit_test_folder/test_unit_test.py should include:
+
+    from src.code_solution import BankAccount
+
+6. Run the main.py file. 
+
+    ```python
+    python main.py
+    ```
