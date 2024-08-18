@@ -25,15 +25,13 @@ cd Self_correcting_coding_agent
 $pip install -e .
 ```
 
-Also, ensure you have Docker installed and running.
-
 3. Environment Configuration:
 
 Create a .env file and fill the following environment variables:
 
 ```python
 OPENAI_API_KEY=your_openai_api_key
-OPENAI_CHAT_MODEL = "gpt-4o-2024-08-06"
+OPENAI_CHAT_MODEL="gpt-4o-2024-08-06"
 ```
 
 4. Run the Application:
