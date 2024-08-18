@@ -1,7 +1,7 @@
 venv/
 .env
-src/__pycache__/
 debug.log
 .venv/
 LLM_Agent_with_docker.egg-info/
 .pytest_cache/
+**/__pycache__/

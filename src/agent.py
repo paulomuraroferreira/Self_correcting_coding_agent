@@ -39,13 +39,13 @@ class code(BaseModel):
 
 class TestCode:
 
-    def __init__(self, name_of_test_file: str):
-        self.name_of_test_file = name_of_test_file
+    def __init__(self, path_of_test_file: str):
+        self.path_of_test_file = path_of_test_file
         self.code_file_path = "src/code_solution.py"
 
     def run_tests(self):
 
-        result = subprocess.run(["pytest", "-v", self.name_of_test_file], capture_output=True, text=True)
+        result = subprocess.run(["pytest", "-v", self.path_of_test_file], capture_output=True, text=True)
 
         captured_output = result.stdout
 
@@ -143,11 +143,11 @@ class TestCode:
         }
 
 class Agent:
-    def __init__(self, name_of_test_file: str):
+    def __init__(self, path_of_test_file: str):
         self.openai_model = os.getenv("OPENAI_CHAT_MODEL") or "gpt-4o-2024-08-06"
         self.llm = ChatOpenAI(model=self.openai_model, temperature=0)
         self.max_iterations = 5
-        self.name_of_test_file = name_of_test_file
+        self.path_of_test_file = path_of_test_file
         self.code_gen_prompt_claude = ChatPromptTemplate.from_messages(
             [
                 (
@@ -173,7 +173,7 @@ class Agent:
             state (dict): New key added to state, generation
         """
 
-        print("---GENERATING CODE SOLUTION---")
+        logger.info("---GENERATING CODE SOLUTION---")
 
         # State
         messages = state["messages"]
@@ -195,7 +195,7 @@ class Agent:
     
     def code_check(self, state: GraphState):
 
-        results = TestCode(self.name_of_test_file).code_check(state)
+        results = TestCode(self.path_of_test_file).code_check(state)
         return results
         
     
@@ -214,20 +214,16 @@ class Agent:
         iterations = state["iterations"]
 
         if error == "no" or iterations == self.max_iterations:
-            print("---DECISION: FINISH---")
+            logger.info("---DECISION: FINISH---")
             return "end"
         else:
-            print("---DECISION: RE-TRY SOLUTION---")
+            logger.info("---DECISION: RE-TRY SOLUTION---")
             return "generate"
-
-
 
 class AgentHandler:
     def __init__(self):
         self.builder = StateGraph(GraphState)
-        self.agent = Agent(name_of_test_file="src/unit_test_folder/test_unit_test.py")
-
-        self.code_check = TestCode(self.agent.name_of_test_file)
+        self.agent = Agent(path_of_test_file="src/unit_test_folder/test_unit_test.py")
         self.build_graph()
 
     def build_graph(self):
@@ -249,11 +245,12 @@ class AgentHandler:
 
         self.graph = self.builder.compile(checkpointer=MemorySaver())
 
-if __name__ == '__main__':
+        from IPython.display import Image
 
-    #Use example
-    question = "Write a function for fibonacci."
-    messages = [("user", question)]
+        # Save the image to a file instead of displaying it
+        image_data = self.graph.get_graph(xray=True).draw_mermaid_png()
+        with open("output_image.png", "wb") as f:
+            f.write(image_data)
+        print("Image saved as output_image.png")
 
-    result = Agent().code_gen_chain.invoke(messages)
-    logger.info(result)
+

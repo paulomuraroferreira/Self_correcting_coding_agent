@@ -2,6 +2,9 @@
 
 This repository implements an LLM agent that receives a user's prompt and corresponding unit tests. The agent generates the code, tests it for correct execution, and ensures it passes the unit tests. If the code fails to execute or fails any unit test, the agent regenerates the code until it succeeds.
 
+![Alt text](README_files/output_image.png)
+
+
 This project builds upon the code from LangChain's Notebook (https://github.com/mistralai/cookbook/blob/main/third_party/langchain/langgraph_code_assistant_mistral.ipynb), where an agent generates code based on the user's prompt and checks if the execution works.
 
 The main contribution of this project is the integration of unit tests into the code execution process.
