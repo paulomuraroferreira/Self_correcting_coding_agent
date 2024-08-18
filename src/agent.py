@@ -11,6 +11,7 @@ from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.graph import END, StateGraph
 from langgraph.checkpoint.memory import MemorySaver
 import subprocess
+import os
 
 class GraphState(TypedDict):
     """
@@ -143,7 +144,7 @@ class TestCode:
 
 class Agent:
     def __init__(self, name_of_test_file: str):
-        self.openai_model = "gpt-4o-2024-08-06"
+        self.openai_model = os.getenv("OPENAI_CHAT_MODEL") or "gpt-4o-2024-08-06"
         self.llm = ChatOpenAI(model=self.openai_model, temperature=0)
         self.max_iterations = 5
         self.name_of_test_file = name_of_test_file
@@ -247,9 +248,6 @@ class AgentHandler:
         )
 
         self.graph = self.builder.compile(checkpointer=MemorySaver())
-
-
-
 
 if __name__ == '__main__':
 
