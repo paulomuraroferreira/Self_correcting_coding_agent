@@ -1,6 +1,6 @@
 # README
 
-This repository implements an LLM agent that receives a user's prompt and corresponding unit tests. The agent generates the code, tests it for correct execution, and ensures it passes the unit tests. If the code fails to execute or fails any unit test, the agent regenerates the code until it succeeds.
+This repository implements a LLM agent that receives a user's prompt and corresponding unit tests. The agent generates the code, tests it for correct execution, and ensures it passes the unit tests. If the code fails to execute or fails any unit test, the agent regenerates the code until it succeeds.
 
 ![Alt text](README_files/output_image.png)
 
